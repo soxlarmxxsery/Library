@@ -2601,7 +2601,7 @@ do
 					AnchorPoint = Vector2New(0.5, 0),
 					Position = UDim2New(0.5, 0, 0, 25),
 					BorderColor3 = FromRGB(0, 34, 37),
-					Size = UDim2New(0, 160, 0, 20),
+					Size = UDim2New(0, 180, 0, 30),
 					BorderSizePixel = 2,
 					BackgroundColor3 = FromRGB(17, 21, 27),
 					ZIndex = 5,
@@ -3097,10 +3097,10 @@ do
 				Instances:Create("UIPadding", {
 					Parent = Items["Notification"].Instance,
 					Name = "\0",
-					PaddingTop = UDimNew(0, 7),
-					PaddingBottom = UDimNew(0, 7),
-					PaddingRight = UDimNew(0, 7),
-					PaddingLeft = UDimNew(0, 7),
+					PaddingTop = UDimNew(0, 5),
+					PaddingBottom = UDimNew(0, 5),
+					PaddingRight = UDimNew(0, 5),
+					PaddingLeft = UDimNew(0, 5),
 				})
 
 				Items["Text"] = Instances:Create("TextLabel", {
@@ -3110,12 +3110,12 @@ do
 					TextColor3 = FromRGB(255, 255, 255),
 					BorderColor3 = FromRGB(0, 0, 0),
 					Text = Name,
-					Size = UDim2New(0, 0, 0, 15),
+					Size = UDim2New(0, 0, 0, 12),
 					BackgroundTransparency = 1,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					BorderSizePixel = 0,
 					AutomaticSize = Enum.AutomaticSize.XY,
-					TextSize = 14,
+					TextSize = 12,
 					RichText = true,
 					BackgroundColor3 = FromRGB(255, 255, 255),
 				})
@@ -5704,7 +5704,7 @@ do
 				SettingsSection:Toggle({
 					Name = "Lock UI",
 					Flag = "LockUI",
-					Default = true,
+					Default = false,
 					Callback = function(Value)
 						if Library.MainFrameInstance then
 							Library.MainFrameInstance:SetLocked(Value)
@@ -5743,7 +5743,7 @@ do
 					Library.HideShowButton.Draggable = true
 					Library.HideShowButton.BackgroundTransparency = 1
 					Library.HideShowButton.Size = UDim2.new(0, 57, 0, 57)
-					Library.HideShowButton.Position = UDim2.new(1, -15, 0, 15)
+					Library.HideShowButton.Position = UDim2.new(0.5, -75, 0.6, -25)
 					Library.HideShowButton.Image = "rbxassetid://84435108807782"
 
 					local HideShowCorner = Instance.new("UICorner")
