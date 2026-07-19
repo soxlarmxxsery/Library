@@ -2601,7 +2601,7 @@ do
 					AnchorPoint = Vector2New(0.5, 0),
 					Position = UDim2New(0.5, 0, 0, 25),
 					BorderColor3 = FromRGB(0, 34, 37),
-					Size = UDim2New(0, 150, 0, 25),
+					Size = UDim2New(0, 160, 0, 20),
 					BorderSizePixel = 2,
 					BackgroundColor3 = FromRGB(17, 21, 27),
 					ZIndex = 5,
