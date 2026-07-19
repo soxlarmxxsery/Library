@@ -194,15 +194,15 @@ do
 
 	local Themes = {
         ["Preset"] = {
-            ["Window Outline"] = FromRGB(0, 34, 37),
-            ["Accent"] = FromRGB(94, 213, 213),
-            ["Background 1"] = FromRGB(17, 21, 27),
+            ["Window Outline"] = FromRGB(37, 29, 0),
+            ["Accent"] = FromRGB(255, 191, 36),
+            ["Background 1"] = FromRGB(24, 20, 11),
             ["Text"] = FromRGB(255, 255, 255),
-            ["Inline"] = FromRGB(19, 25, 31),
-            ["Element"] = FromRGB(32, 38, 48),
-            ["Inactive Text"] = FromRGB(185, 185, 185),
-            ["Border"] =  FromRGB(46, 52, 61),
-            ["Background 2"] = FromRGB(24, 28, 36)
+            ["Inline"] = FromRGB(27, 22, 12),
+            ["Element"] = FromRGB(46, 37, 18),
+            ["Inactive Text"] = FromRGB(188, 178, 150),
+            ["Border"] =  FromRGB(64, 51, 22),
+            ["Background 2"] = FromRGB(32, 26, 14)
         }
 	}
 
@@ -472,20 +472,28 @@ do
 				newOffsetX = absoluteCenterX - (screenSize.X * StartPosition.X.Scale)
 				newOffsetY = absoluteCenterY - (screenSize.Y * StartPosition.Y.Scale)
 
-				self:Tween(
-					TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-					{ Position = UDim2New(StartPosition.X.Scale, newOffsetX, StartPosition.Y.Scale, newOffsetY) }
-				)
+				-- Set instantly instead of tweening every frame. Stacking a fresh
+				-- 0.35s tween on every mouse-move frame fights the previous tween
+				-- for control of Position, which is what caused the laggy/rubber-
+				-- banding drag (and got worse once resizing also tweened Position).
+				Gui.Position = UDim2New(StartPosition.X.Scale, newOffsetX, StartPosition.Y.Scale, newOffsetY)
 			end
 
 			local InputChanged
 
 			self:Connect("InputBegan", function(Input)
+				if self.Resizing then
+					-- An edge-resize grab is in progress (or InputBegan bubbled up
+					-- from one of the resize edge buttons) - don't also start a drag.
+					return
+				end
+
 				if
 					Input.UserInputType == Enum.UserInputType.MouseButton1
 					or Input.UserInputType == Enum.UserInputType.Touch
 				then
 					Dragging = true
+					self.Dragging = true
 					DragStart = Input.Position
 					StartPosition = Gui.Position
 
@@ -496,6 +504,7 @@ do
 					InputChanged = Input.Changed:Connect(function()
 						if Input.UserInputState == Enum.UserInputState.End then
 							Dragging = false
+							self.Dragging = false
 							InputChanged:Disconnect()
 							InputChanged = nil
 						end
@@ -575,7 +584,10 @@ do
 
 			local BeginResizing = function(Side)
 				if not Library.Flags["UI Expand"] then return end
+				if self.Dragging then return end -- a whole-frame drag already grabbed this input, don't also resize
+
 				Resizing = true
+				self.Resizing = true
 				CurrentSide = Side
 
 				StartMouse = UserInputService:GetMouseLocation()
@@ -591,6 +603,7 @@ do
 
 			local EndResizing = function()
 				Resizing = false
+				self.Resizing = false
 				CurrentSide = nil
 
 				for Index, Value in Edges do
@@ -607,7 +620,7 @@ do
 			end
 
 			Library:Connect(UserInputService.InputEnded, function(Input)
-				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 					if Resizing then
 						EndResizing()
 					end
@@ -651,14 +664,12 @@ do
 					h = Minimum.Y
 				end
 
-				self:Tween(
-					TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-					{ Position = UDim2FromOffset(x, y) }
-				)
-				self:Tween(
-					TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-					{ Size = UDim2FromOffset(w, h) }
-				)
+				-- Instant set instead of tweening every RenderStepped frame - stacking
+				-- a new 0.35s tween 60x/sec caused the jitter/lag ("buggin") and, since
+				-- it animates the same Position property MakeDraggable tweens, could
+				-- leave a stray resize tween still fighting a later drag.
+				Gui.Position = UDim2FromOffset(x, y)
+				Gui.Size = UDim2FromOffset(w, h)
 			end)
 		end
 
@@ -5701,7 +5712,7 @@ do
 					local HideShowStroke = Instance.new("UIStroke")
 					HideShowStroke.Parent = Library.HideShowButton
 					HideShowStroke.Thickness = 1.95
-					HideShowStroke.Color = Color3.fromRGB(127, 10, 10)
+					HideShowStroke.Color = Color3.fromRGB(255, 191, 36)
 					HideShowStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 					Library.HideShowButton.MouseButton1Click:Connect(function()
