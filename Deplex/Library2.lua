@@ -5743,7 +5743,7 @@ do
 					Library.HideShowButton.Draggable = true
 					Library.HideShowButton.BackgroundTransparency = 1
 					Library.HideShowButton.Size = UDim2.new(0, 57, 0, 57)
-					Library.HideShowButton.Position = UDim2.new(0.5, -75, 0.6, -25)
+					Library.HideShowButton.Position = UDim2.new(1, -15, 0, 15)
 					Library.HideShowButton.Image = "rbxassetid://84435108807782"
 
 					local HideShowCorner = Instance.new("UICorner")
