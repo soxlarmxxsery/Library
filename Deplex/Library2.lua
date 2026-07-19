@@ -2601,7 +2601,7 @@ do
 					AnchorPoint = Vector2New(0.5, 0),
 					Position = UDim2New(0.5, 0, 0, 25),
 					BorderColor3 = FromRGB(0, 34, 37),
-					Size = UDim2New(0, 180, 0, 30),
+					Size = UDim2New(0, 150, 0, 25),
 					BorderSizePixel = 2,
 					BackgroundColor3 = FromRGB(17, 21, 27),
 					ZIndex = 5,
@@ -5704,7 +5704,7 @@ do
 				SettingsSection:Toggle({
 					Name = "Lock UI",
 					Flag = "LockUI",
-					Default = false,
+					Default = true,
 					Callback = function(Value)
 						if Library.MainFrameInstance then
 							Library.MainFrameInstance:SetLocked(Value)
