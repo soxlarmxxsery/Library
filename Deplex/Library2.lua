@@ -482,6 +482,11 @@ do
 			local InputChanged
 
 			self:Connect("InputBegan", function(Input)
+				if self.Locked then
+					-- Dragging has been locked (e.g. via a settings toggle) - ignore grabs entirely.
+					return
+				end
+
 				if self.Resizing then
 					-- An edge-resize grab is in progress (or InputBegan bubbled up
 					-- from one of the resize edge buttons) - don't also start a drag.
@@ -524,6 +529,10 @@ do
 			end)
 
 			return Dragging
+		end
+
+		Instances.SetLocked = function(self, Bool)
+			self.Locked = Bool
 		end
 
 		Instances.MakeResizeable = function(self, Minimum, Maximum)
@@ -584,6 +593,7 @@ do
 
 			local BeginResizing = function(Side)
 				if not Library.Flags["UI Expand"] then return end
+				if self.Locked then return end -- UI is locked via settings - don't allow resizing either
 				if self.Dragging then return end -- a whole-frame drag already grabbed this input, don't also resize
 
 				Resizing = true
@@ -662,6 +672,19 @@ do
 						y = y - (Minimum.Y - h)
 					end
 					h = Minimum.Y
+				end
+
+				if w > Maximum.X then
+					if CurrentSide == "L" then
+						x = x + (w - Maximum.X)
+					end
+					w = Maximum.X
+				end
+				if h > Maximum.Y then
+					if CurrentSide == "T" then
+						y = y + (h - Maximum.Y)
+					end
+					h = Maximum.Y
 				end
 
 				-- Instant set instead of tweening every RenderStepped frame - stacking
@@ -3156,13 +3179,13 @@ do
 					Parent = Library.Holder.Instance,
 					Name = "\0",
 					Size = UDim2New(0, 295, 0, 21),
-					Position = UDim2New(0, 0, 0.8, 0),
+					AnchorPoint = Vector2New(0.5, 0),
+					Position = UDim2New(0.5, 0, 0.8, 0),
 					BorderColor3 = FromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					ZIndex = 6,
 					AutomaticSize = Enum.AutomaticSize.Y,
 					BackgroundColor3 = FromRGB(17, 21, 27),
-					Visible = false,
 				})
 				Items["TargetHud"]:AddToTheme({ BackgroundColor3 = "Background 1" })
 
@@ -3436,6 +3459,12 @@ do
 				Items["TargetHud"].Instance.Position = Position
 			end
 
+			function TargetHud:SetLocked(Bool)
+				Items["TargetHud"]:SetLocked(Bool)
+			end
+
+			Library.TargetHudInstance = TargetHud
+
 			return TargetHud
 		end
 
@@ -3481,6 +3510,7 @@ do
 				})
 
 				Library.MainFrame = Items["MainFrame"].Instance
+				Library.MainFrameInstance = Items["MainFrame"]
 
 				Items["MainFrame"]:MakeDraggable()
 				Items["MainFrame"]:MakeResizeable(Vector2New(621, 542), Vector2New(9999, 9999))
@@ -5668,6 +5698,17 @@ do
 					Default = false,
 					Callback = function(Value)
 						KeybindList:SetVisibility(Value)
+					end,
+				})
+
+				SettingsSection:Toggle({
+					Name = "Lock UI",
+					Flag = "LockUI",
+					Default = false,
+					Callback = function(Value)
+						if Library.MainFrameInstance then
+							Library.MainFrameInstance:SetLocked(Value)
+						end
 					end,
 				})
 
