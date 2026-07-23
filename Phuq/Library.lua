@@ -4629,6 +4629,8 @@ do
 				Options = {},
 				Value = {},
 				IsOpen = false,
+				DragSelecting = false,
+				DragTargetState = false,
 			}
 
 			local Items = {}
@@ -4917,7 +4919,10 @@ do
 				Dropdown.IsOpen = Bool
 				Debounce = true
 
-				Items["Chevron"]:Tween(nil, { Rotation = Bool and -90 or 90 })
+				Items["Chevron"]:Tween(
+					TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+					{ Rotation = Bool and -90 or 90 }
+				)
 
 				if Bool then
 					Items["OptionHolder"].Instance.Visible = true
@@ -5145,6 +5150,19 @@ do
 
 				OptionData.Button:Connect("MouseButton1Down", function()
 					OptionData:Set()
+
+					if Data.Multi then
+						Dropdown.DragSelecting = true
+						Dropdown.DragTargetState = OptionData.Selected
+					end
+				end)
+
+				-- Obsidian-style drag-select: click a row, then drag across other rows
+				-- while still holding the mouse to select/deselect them all in one motion.
+				OptionData.Button:OnHover(function()
+					if Data.Multi and Dropdown.DragSelecting and OptionData.Selected ~= Dropdown.DragTargetState then
+						OptionData:Set()
+					end
 				end)
 
 				Dropdown.Options[OptionData.Name] = OptionData
@@ -5188,6 +5206,12 @@ do
 					end
 
 					Dropdown:SetOpen(false)
+				end
+			end)
+
+			Library:Connect(UserInputService.InputEnded, function(Input)
+				if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+					Dropdown.DragSelecting = false
 				end
 			end)
 
