@@ -2598,61 +2598,48 @@ do
 				Items["Watermark"] = Instances:Create("Frame", {
 					Parent = Library.Holder.Instance,
 					Name = "\0",
-					AnchorPoint = Vector2New(0.5, 0),
-					Position = UDim2New(0.5, 0, 0, 25),
-					BorderColor3 = FromRGB(0, 34, 37),
-					Size = UDim2New(0, 180, 0, 30),
-					BorderSizePixel = 2,
+					AnchorPoint = Vector2New(1, 0),
+					Position = UDim2New(1, -15, 0, 15),
+					BorderColor3 = FromRGB(0, 0, 0),
+					Size = UDim2New(0, 150, 0, 26),
+					BorderSizePixel = 0,
 					BackgroundColor3 = FromRGB(17, 21, 27),
 					ZIndex = 5,
 				})
 				Items["Watermark"]:AddToTheme({ BackgroundColor3 = "Background 1" })
 
+				Instances:Create("UICorner", {
+					Parent = Items["Watermark"].Instance,
+					Name = "\0",
+					CornerRadius = UDimNew(0, 5),
+				})
+
 				Items["UIStroke"] = Instances:Create("UIStroke", {
 					Parent = Items["Watermark"].Instance,
 					Name = "\0",
-					Color = FromRGB(94, 213, 213),
+					Color = FromRGB(46, 52, 61),
+					Thickness = 1,
 					LineJoinMode = Enum.LineJoinMode.Miter,
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				})
-				Items["UIStroke"]:AddToTheme({ Color = "Accent" })
+				Items["UIStroke"]:AddToTheme({ Color = "Border" })
 
-				Instances:Create("UIGradient", {
-					Parent = Items["UIStroke"].Instance,
-					Name = "\0",
-					Rotation = 90,
-					Transparency = NumSequence({
-						NumSequenceKeypoint(0, 0),
-						NumSequenceKeypoint(0.696, 0.2749999761581421),
-						NumSequenceKeypoint(0.84, 0.574999988079071),
-						NumSequenceKeypoint(1, 1),
-					}),
-				})
-
-				Items["Glow"] = Instances:Create("ImageLabel", {
+				Items["Dot"] = Instances:Create("Frame", {
 					Parent = Items["Watermark"].Instance,
 					Name = "\0",
-					ImageColor3 = FromRGB(94, 213, 213),
-					ScaleType = Enum.ScaleType.Slice,
-					ImageTransparency = 0.5,
+					AnchorPoint = Vector2New(0, 0.5),
+					Position = UDim2New(0, 10, 0.5, 0),
+					Size = UDim2New(0, 6, 0, 6),
 					BorderColor3 = FromRGB(0, 0, 0),
-					BackgroundColor3 = FromRGB(255, 255, 255),
-					Size = UDim2New(1, 25, 1, 25),
-					AnchorPoint = Vector2New(0.5, 0.5),
-					Image = "rbxassetid://18245826428",
-					BackgroundTransparency = 1,
-					Position = UDim2New(0.5, 0, 0.5, 0),
-					ZIndex = 4,
 					BorderSizePixel = 0,
-					SliceCenter = RectNew(Vector2New(21, 21), Vector2New(79, 79)),
+					BackgroundColor3 = FromRGB(94, 213, 213),
 				})
-				Items["Glow"]:AddToTheme({ ImageColor3 = "Accent" })
+				Items["Dot"]:AddToTheme({ BackgroundColor3 = "Accent" })
 
-				Instances:Create("UIGradient", {
-					Parent = Items["Glow"].Instance,
+				Instances:Create("UICorner", {
+					Parent = Items["Dot"].Instance,
 					Name = "\0",
-					Rotation = 90,
-					Transparency = NumSequence({ NumSequenceKeypoint(0, 0), NumSequenceKeypoint(1, 1) }),
+					CornerRadius = UDimNew(1, 0),
 				})
 
 				Items["Text"] = Instances:Create("TextLabel", {
@@ -2662,14 +2649,15 @@ do
 					TextColor3 = FromRGB(255, 255, 255),
 					BorderColor3 = FromRGB(0, 0, 0),
 					Text = Name,
-					AnchorPoint = Vector2New(0.5, 0.5),
+					AnchorPoint = Vector2New(0, 0.5),
 					Size = UDim2New(0, 0, 0, 15),
 					BackgroundTransparency = 1,
-					Position = UDim2New(0.5, 0, 0.5, 0),
+					TextXAlignment = Enum.TextXAlignment.Left,
+					Position = UDim2New(0, 23, 0.5, 0),
 					BorderSizePixel = 0,
 					ZIndex = 5,
 					AutomaticSize = Enum.AutomaticSize.X,
-					TextSize = 14,
+					TextSize = 13,
 					RichText = true,
 					BackgroundColor3 = FromRGB(255, 255, 255),
 				})
@@ -2702,7 +2690,7 @@ do
 				end)
 				
 				Items["Text"].Instance.Text = string.format("%s | %d FPS | %d ms", Watermark.BaseText, CurrentFps, Ping)
-				Items["Watermark"]:Tween(nil, { Size = UDim2New(0, Items["Text"].Instance.TextBounds.X + 20, 0, 30) })
+				Items["Watermark"]:Tween(nil, { Size = UDim2New(0, Items["Text"].Instance.TextBounds.X + 23 + 10, 0, 26) })
 			end)
 
 			function Watermark:SetVisibility(Bool)
@@ -2710,6 +2698,8 @@ do
 			end
 
 			Watermark:SetText(Name)
+
+			Library.WatermarkInstance = Watermark
 
 			return Watermark
 		end
