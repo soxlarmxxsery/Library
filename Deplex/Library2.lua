@@ -2624,24 +2624,6 @@ do
 				})
 				Items["UIStroke"]:AddToTheme({ Color = "Border" })
 
-				Items["Dot"] = Instances:Create("Frame", {
-					Parent = Items["Watermark"].Instance,
-					Name = "\0",
-					AnchorPoint = Vector2New(0, 0.5),
-					Position = UDim2New(0, 10, 0.5, 0),
-					Size = UDim2New(0, 6, 0, 6),
-					BorderColor3 = FromRGB(0, 0, 0),
-					BorderSizePixel = 0,
-					BackgroundColor3 = FromRGB(94, 213, 213),
-				})
-				Items["Dot"]:AddToTheme({ BackgroundColor3 = "Accent" })
-
-				Instances:Create("UICorner", {
-					Parent = Items["Dot"].Instance,
-					Name = "\0",
-					CornerRadius = UDimNew(1, 0),
-				})
-
 				Items["Text"] = Instances:Create("TextLabel", {
 					Parent = Items["Watermark"].Instance,
 					Name = "\0",
@@ -2649,11 +2631,11 @@ do
 					TextColor3 = FromRGB(255, 255, 255),
 					BorderColor3 = FromRGB(0, 0, 0),
 					Text = Name,
-					AnchorPoint = Vector2New(0, 0.5),
+					AnchorPoint = Vector2New(0.5, 0.5),
 					Size = UDim2New(0, 0, 0, 15),
 					BackgroundTransparency = 1,
-					TextXAlignment = Enum.TextXAlignment.Left,
-					Position = UDim2New(0, 23, 0.5, 0),
+					TextXAlignment = Enum.TextXAlignment.Center,
+					Position = UDim2New(0.5, 0, 0.5, 0),
 					BorderSizePixel = 0,
 					ZIndex = 5,
 					AutomaticSize = Enum.AutomaticSize.X,
@@ -2690,7 +2672,7 @@ do
 				end)
 				
 				Items["Text"].Instance.Text = string.format("%s | %d FPS | %d ms", Watermark.BaseText, CurrentFps, Ping)
-				Items["Watermark"]:Tween(nil, { Size = UDim2New(0, Items["Text"].Instance.TextBounds.X + 23 + 10, 0, 26) })
+				Items["Watermark"]:Tween(nil, { Size = UDim2New(0, Items["Text"].Instance.TextBounds.X + 30, 0, 26) })
 			end)
 
 			function Watermark:SetVisibility(Bool)
@@ -4735,15 +4717,15 @@ do
 					FontFace = Library.Font,
 					TextColor3 = FromRGB(255, 255, 255),
 					BorderColor3 = FromRGB(0, 0, 0),
-					Text = "▾",
+					Text = ">",
 					AnchorPoint = Vector2New(1, 0.5),
 					Size = UDim2New(0, 16, 0, 15),
 					BackgroundTransparency = 1,
-					TextXAlignment = Enum.TextXAlignment.Right,
+					TextXAlignment = Enum.TextXAlignment.Center,
 					Position = UDim2New(1, -8, 0.5, 0),
 					BorderSizePixel = 0,
 					TextSize = 14,
-					Rotation = 0,
+					Rotation = 90,
 					BackgroundColor3 = FromRGB(255, 255, 255),
 				})
 				Items["Chevron"]:AddToTheme({ TextColor3 = "Text" })
@@ -4935,7 +4917,7 @@ do
 				Dropdown.IsOpen = Bool
 				Debounce = true
 
-				Items["Chevron"]:Tween(nil, { Rotation = Bool and 180 or 0 })
+				Items["Chevron"]:Tween(nil, { Rotation = Bool and -90 or 90 })
 
 				if Bool then
 					Items["OptionHolder"].Instance.Visible = true
