@@ -5440,12 +5440,15 @@ do
 			-- Convenience: pass a Roblox UserId straight in and this fetches their
 			-- avatar thumbnail for you, same idea as Obsidian's GetUserThumbnailAsync + AddImage.
 			function Image:SetPlayerThumbnail(UserId, ThumbnailType, ThumbnailSize)
-				local Content = Players:GetUserThumbnailAsync(
+				local Success, Content = pcall(Players.GetUserThumbnailAsync, Players,
 					UserId,
 					ThumbnailType or Enum.ThumbnailType.HeadShot,
 					ThumbnailSize or Enum.ThumbnailSize.Size150x150
 				)
-				Items["Image"].Instance.Image = Content
+
+				if Success then
+					Items["Image"].Instance.Image = Content
+				end
 			end
 
 			function Image:SetImage(Content)
