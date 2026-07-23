@@ -5403,6 +5403,66 @@ do
 			return Listbox
 		end
 
+		Library.Sections.Image = function(self, Data)
+			Data = Data or {}
+
+			local Image = {
+				Window = self.Window,
+				Page = self.Page,
+				Section = self,
+			}
+
+			local Items = {}
+			do
+				Items["Image"] = Instances:Create("ImageLabel", {
+					Parent = Image.Section.Items["Content"].Instance,
+					Name = "\0",
+					BackgroundTransparency = 1,
+					BorderColor3 = FromRGB(0, 0, 0),
+					BorderSizePixel = 0,
+					ZIndex = 2,
+					Size = UDim2New(1, 0, 0, Data.Height or Data.height or 100),
+					Image = Data.Image or Data.image or "",
+					ImageColor3 = Data.Color or Data.color or FromRGB(255, 255, 255),
+					ImageTransparency = Data.Transparency or Data.transparency or 0,
+					ScaleType = Data.ScaleType or Data.scaletype or Enum.ScaleType.Fit,
+					Visible = (Data.Visible == nil and Data.visible == nil) and true or (Data.Visible or Data.visible),
+				})
+
+				if Data.RectOffset or Data.rectoffset then
+					Items["Image"].Instance.RectOffset = Data.RectOffset or Data.rectoffset
+				end
+				if Data.RectSize or Data.rectsize then
+					Items["Image"].Instance.RectSize = Data.RectSize or Data.rectsize
+				end
+			end
+
+			-- Convenience: pass a Roblox UserId straight in and this fetches their
+			-- avatar thumbnail for you, same idea as Obsidian's GetUserThumbnailAsync + AddImage.
+			function Image:SetPlayerThumbnail(UserId, ThumbnailType, ThumbnailSize)
+				local Content = Players:GetUserThumbnailAsync(
+					UserId,
+					ThumbnailType or Enum.ThumbnailType.HeadShot,
+					ThumbnailSize or Enum.ThumbnailSize.Size150x150
+				)
+				Items["Image"].Instance.Image = Content
+			end
+
+			function Image:SetImage(Content)
+				Items["Image"].Instance.Image = Content
+			end
+
+			function Image:SetHeight(Height)
+				Items["Image"].Instance.Size = UDim2New(1, 0, 0, Height)
+			end
+
+			function Image:SetVisibility(Bool)
+				Items["Image"].Instance.Visible = Bool
+			end
+
+			return Image
+		end
+
 		Library.Sections.Label = function(self, Name)
 			local Label = {
 				Window = self.Window,
