@@ -4706,6 +4706,12 @@ do
 				})
 				Items["RealDropdown"]:AddToTheme({ BackgroundColor3 = "Element" })
 
+				Instances:Create("UICorner", {
+					Parent = Items["RealDropdown"].Instance,
+					Name = "\0",
+					CornerRadius = UDimNew(0, 6),
+				})
+
 				Instances:Create("UIStroke", {
 					Parent = Items["RealDropdown"].Instance,
 					Name = "\0",
@@ -4722,16 +4728,35 @@ do
 					BorderColor3 = FromRGB(0, 0, 0),
 					Text = "-",
 					AnchorPoint = Vector2New(0, 0.5),
-					Size = UDim2New(1, -16, 0, 15),
+					Size = UDim2New(1, -32, 0, 15),
 					BackgroundTransparency = 1,
 					TextXAlignment = Enum.TextXAlignment.Left,
-					Position = UDim2New(0, 4, 0.5, 0),
+					Position = UDim2New(0, 8, 0.5, 0),
 					BorderSizePixel = 0,
 					TextSize = 14,
 					RichText = true,
 					BackgroundColor3 = FromRGB(255, 255, 255),
 				})
 				Items["Value"]:AddToTheme({ TextColor3 = "Text" })
+
+				Items["Chevron"] = Instances:Create("TextLabel", {
+					Parent = Items["RealDropdown"].Instance,
+					Name = "\0",
+					FontFace = Library.Font,
+					TextColor3 = FromRGB(255, 255, 255),
+					BorderColor3 = FromRGB(0, 0, 0),
+					Text = "▾",
+					AnchorPoint = Vector2New(1, 0.5),
+					Size = UDim2New(0, 16, 0, 15),
+					BackgroundTransparency = 1,
+					TextXAlignment = Enum.TextXAlignment.Right,
+					Position = UDim2New(1, -8, 0.5, 0),
+					BorderSizePixel = 0,
+					TextSize = 14,
+					Rotation = 0,
+					BackgroundColor3 = FromRGB(255, 255, 255),
+				})
+				Items["Chevron"]:AddToTheme({ TextColor3 = "Text" })
 
 				Items["OptionHolder"] = Instances:Create("TextButton", {
 					Parent = Library.Holder.Instance,
@@ -4749,6 +4774,12 @@ do
 					BackgroundColor3 = FromRGB(32, 38, 48),
 				})
 				Items["OptionHolder"]:AddToTheme({ BackgroundColor3 = "Element" })
+
+				Instances:Create("UICorner", {
+					Parent = Items["OptionHolder"].Instance,
+					Name = "\0",
+					CornerRadius = UDimNew(0, 6),
+				})
 
 				Instances:Create("UIStroke", {
 					Parent = Items["OptionHolder"].Instance,
@@ -4914,6 +4945,8 @@ do
 				Dropdown.IsOpen = Bool
 				Debounce = true
 
+				Items["Chevron"]:Tween(nil, { Rotation = Bool and 180 or 0 })
+
 				if Bool then
 					Items["OptionHolder"].Instance.Visible = true
 					Items["OptionHolder"].Instance.Parent = Library.Holder.Instance
@@ -4925,7 +4958,7 @@ do
 							0,
 							Items["RealDropdown"].Instance.AbsolutePosition.Y
 								+ Items["RealDropdown"].Instance.AbsoluteSize.Y
-								+ 65
+								+ 6
 						)
 
 						Items["OptionHolder"].Instance.Size =
@@ -4994,21 +5027,17 @@ do
 					Text = "",
 					AutoButtonColor = false,
 					BackgroundTransparency = 1,
-					Size = UDim2New(1, 0, 0, 20),
+					Size = UDim2New(1, 0, 0, 22),
 					BorderSizePixel = 0,
 					TextSize = 14,
 					BackgroundColor3 = FromRGB(32, 38, 48),
 				})
 				OptionButton:AddToTheme({ BackgroundColor3 = "Element" })
 
-				Instances:Create("UIGradient", {
+				Instances:Create("UICorner", {
 					Parent = OptionButton.Instance,
 					Name = "\0",
-					Rotation = -90,
-					Color = RGBSequence({
-						RGBSequenceKeypoint(0, FromRGB(255, 255, 255)),
-						RGBSequenceKeypoint(1, FromRGB(200, 200, 200)),
-					}),
+					CornerRadius = UDimNew(0, 5),
 				})
 
 				local OptionStroke = Instances:Create("UIStroke", {
@@ -5026,24 +5055,31 @@ do
 					Name = "\0",
 					BackgroundTransparency = 1,
 					BorderColor3 = FromRGB(0, 0, 0),
-					Size = UDim2New(0, 1, 1, 0),
+					Size = UDim2New(0, 3, 1, -8),
+					AnchorPoint = Vector2New(0, 0.5),
+					Position = UDim2New(0, 4, 0.5, 0),
 					BorderSizePixel = 0,
 					BackgroundColor3 = FromRGB(94, 213, 213),
 				})
 				OptionLiner:AddToTheme({ BackgroundColor3 = "Accent" })
+
+				Instances:Create("UICorner", {
+					Parent = OptionLiner.Instance,
+					Name = "\0",
+					CornerRadius = UDimNew(1, 0),
+				})
 
 				local OptionText = Instances:Create("TextLabel", {
 					Parent = OptionButton.Instance,
 					Name = "\0",
 					FontFace = Library.Font,
 					TextColor3 = FromRGB(255, 255, 255),
-					TextTransparency = 0.4000000059604645,
 					Text = Option,
 					Size = UDim2New(0, 0, 0, 15),
 					AnchorPoint = Vector2New(0, 0.5),
 					BorderSizePixel = 0,
 					BackgroundTransparency = 1,
-					Position = UDim2New(0, 10, 0.5, 0),
+					Position = UDim2New(0, 14, 0.5, 0),
 					BorderColor3 = FromRGB(0, 0, 0),
 					AutomaticSize = Enum.AutomaticSize.X,
 					TextSize = 14,
@@ -5063,17 +5099,27 @@ do
 
 				function OptionData:Toggle(Status)
 					if Status == "Active" then
-						OptionData.Liner:Tween(nil, { BackgroundTransparency = 0, Size = UDim2New(0, 1, 1, 0) })
-						OptionData.Text:Tween(nil, { TextTransparency = 0 })
-						OptionData.Button:Tween(nil, { BackgroundTransparency = 0 })
-						OptionData.Stroke:Tween(nil, { Transparency = 0 })
+						OptionData.Liner:Tween(nil, { BackgroundTransparency = 0 })
+						OptionData.Button:Tween(nil, { BackgroundTransparency = 0.85 })
+						OptionData.Stroke:Tween(nil, { Transparency = 0.5 })
 					else
 						OptionData.Liner:Tween(nil, { BackgroundTransparency = 1 })
-						OptionData.Text:Tween(nil, { TextTransparency = 0.4 })
 						OptionData.Button:Tween(nil, { BackgroundTransparency = 1 })
 						OptionData.Stroke:Tween(nil, { Transparency = 1 })
 					end
 				end
+
+				OptionButton:OnHover(function()
+					if not OptionData.Selected then
+						OptionButton:Tween(nil, { BackgroundTransparency = 0.85 })
+					end
+				end)
+
+				OptionButton:OnHoverLeave(function()
+					if not OptionData.Selected then
+						OptionButton:Tween(nil, { BackgroundTransparency = 1 })
+					end
+				end)
 
 				function OptionData:Set()
 					OptionData.Selected = not OptionData.Selected
